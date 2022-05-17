@@ -16,7 +16,11 @@ This project is an implementation of the Viterbi algorithm for Parts of Speech t
 - numpy
 
 ### Execution
+Download the required treebanks from Universal Dependencies (english ewt, japanese gsd, spanish gsd, arabic padt, dutch alpino) from the Universal Dependencies site (https://universaldependencies.org/#download).
+```
 python main.py
+```
+The script above will execute all three algorithms for all five language treebanks and report results on console and save confusion matrix figures in the figs/ subfolder.
 
 ### Known Bugs
-- IMPT contains a bug as it should have a better accuracy than Viterbi.
+- Forward Backward algorithm contains a bug as it should have a better accuracy than Viterbi.

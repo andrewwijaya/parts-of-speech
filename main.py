@@ -114,9 +114,9 @@ def generate_witten_bell_array(tag_list, freq_dist_dict):
     return smoothed
 
 
-def eager_algorithm(tag_list, sentence, A, B):
+def greedy_algorithm(tag_list, sentence, A, B):
     """
-    Implementation of the eager algorithm. This function takes a sentence and returns the pos tagging for that sentence
+    Implementation of the greedy algorithm. This function takes a sentence and returns the pos tagging for that sentence
     based on transition table A and emission table B.
     """
     pos_tagging = []
@@ -223,9 +223,9 @@ def get_accuracy(pos_taggings, test_sents):
     return matches / total
 
 
-def impt_forward_algorithm(tag_list, A, B, sentence):
+def forward_algorithm(tag_list, A, B, sentence):
     """
-    IMPT forward algorithm implementation. This function populates the alpha table.
+    Forward algorithm implementation. This function populates the alpha table.
     """
     tag_dict = get_tag_dict(tag_list)
     alpha_table = np.zeros(((len(tag_list) - 2), (len(sentence)) + 1))
@@ -255,9 +255,9 @@ def impt_forward_algorithm(tag_list, A, B, sentence):
     return alpha_table
 
 
-def impt_backward_algorithm(tag_list, A, B, sentence):
+def backward_algorithm(tag_list, A, B, sentence):
     """
-    IMPT backward algorithm implementation. This function populates the beta table.
+    Backward algorithm implementation. This function populates the beta table.
     """
     tag_dict = get_tag_dict(tag_list)
     beta_table = np.zeros(((len(tag_list) - 2), (len(sentence)) + 1))
@@ -322,26 +322,26 @@ def run_viterbi(test_sents, tag_list, A, B):
     return pos_taggings
 
 
-# run eager on each test sentence and collect results
-def run_eager(test_sents, tag_list, A, B):
+# run greedy on each test sentence and collect results
+def run_greedy(test_sents, tag_list, A, B):
     """
-    Executes the Eager algorithm for all sentences.
+    Executes the greedy algorithm for all sentences.
     """
     pos_taggings = []
     for test_sent in test_sents:
-        pos_tagging = eager_algorithm(tag_list, test_sent, A, B)
+        pos_tagging = greedy_algorithm(tag_list, test_sent, A, B)
         pos_taggings.append(pos_tagging)
     return pos_taggings
 
 
-def run_impt(test_sents, tag_list, A, B):
+def run_forward_backward(test_sents, tag_list, A, B):
     """
-    Executes the IMPT algorithm for all sentences.
+    Executes the forward backward algorithm for all sentences.
     """
     pos_taggings = []
     for test_sent in test_sents:
-        alpha_table = impt_forward_algorithm(tag_list, A, B, test_sent)
-        beta_table = impt_backward_algorithm(tag_list, A, B, test_sent)
+        alpha_table = forward_algorithm(tag_list, A, B, test_sent)
+        beta_table = backward_algorithm(tag_list, A, B, test_sent)
         pos_tagging = local_decode(alpha_table[:, :-1], beta_table[:, 1:], tag_list)
         pos_taggings.append(pos_tagging)
     return pos_taggings
@@ -421,21 +421,21 @@ def run_all():
         print(len(test_sents), 'test sentences')
 
         pos_taggings_dict = {}
-        eager_pos_taggings = run_eager(test_sents, tag_list, A, B)
+        greedy_pos_taggings = run_greedy(test_sents, tag_list, A, B)
         viterbi_pos_taggings = run_viterbi(test_sents, tag_list, A, B)
-        impt_pos_taggings = run_impt(test_sents, tag_list, A, B)
+        forward_backward_pos_taggings = run_forward_backward(test_sents, tag_list, A, B)
 
-        pos_taggings_dict["eager"] = eager_pos_taggings
+        pos_taggings_dict["greedy"] = greedy_pos_taggings
         pos_taggings_dict["viterbi"] = viterbi_pos_taggings
-        pos_taggings_dict["impt"] = impt_pos_taggings
+        pos_taggings_dict["forward_backward"] = forward_backward_pos_taggings
 
-        eager_accuracy = get_accuracy(eager_pos_taggings, test_sents)
+        greedy_accuracy = get_accuracy(greedy_pos_taggings, test_sents)
         viterbi_accuracy = get_accuracy(viterbi_pos_taggings, test_sents)
-        impt_accuracy = get_accuracy(impt_pos_taggings, test_sents)
+        forward_backward_accuracy = get_accuracy(forward_backward_pos_taggings, test_sents)
 
-        print("Eager accuracy: ", eager_accuracy)
+        print("greedy accuracy: ", greedy_accuracy)
         print("Viterbi accuracy: ", viterbi_accuracy)
-        print("IMPT accuracy: ", impt_accuracy)
+        print("Forward Backward accuracy: ", forward_backward_accuracy)
         test_tag_list = get_tag_list(test_sents)
         print("Train tag set size: (without start and end tags) ", len(tag_list) - 2)
         print("Test tag set size: (without start and end tags) ", len(test_tag_list) - 2)
