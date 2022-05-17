@@ -22,5 +22,10 @@ python main.py
 ```
 The script above will execute all three algorithms for all five language treebanks and report results on console and save confusion matrix figures in the figs/ subfolder.
 
+### Test Accuracy Results for English POS Tagging
+Greedy: 87.5%
+Viterbi: 89.5
+Forward-Backward: 85.0%
+
 ### Known Bugs
 - Forward Backward algorithm contains a bug as it should have a better accuracy than Viterbi.
