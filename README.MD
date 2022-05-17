@@ -1,6 +1,6 @@
-# Viterbi Algorithm for Parts of Speech Tagging
+# Algorithms for Parts of Speech Tagging
 
-This project is an implementation of the Viterbi algorithm for Parts of Speech tagging of any language supported by the Universal Dependencies Treebanks.
+This project is an implementation of the Greedy, Viterbi, and Forward-Backward algorithms for Parts of Speech tagging of any language supported by the Universal Dependencies Treebanks.
 
 ### Algorithms
 - Greedy algorithm
